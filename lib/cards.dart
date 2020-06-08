@@ -124,10 +124,27 @@ class _CardsState extends State<Cards> {
                             child: Align(
                               alignment: Alignment.center,
                               child: ListTile(
-                                title: Chip(
-                                  label: results != null
-                                      ? Text(results)
-                                      : Text(""),
+                                title: Transform(
+                                  transform: Matrix4.identity()
+                                    ..scale(1.5, 1.0),
+                                  child: Chip(
+                                    elevation: 10.0,
+                                    label: results != null
+                                        ? Text(
+                                            results,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20.0,
+                                                color: colorBlack),
+                                          )
+                                        : Text(
+                                            "0.0",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20.0,
+                                                color: colorBlack),
+                                          ),
+                                  ),
                                 ),
                                 trailing: _buildDropdownButton(_toCurrency),
                               ),
@@ -143,7 +160,7 @@ class _CardsState extends State<Cards> {
                     child: IconButton(
                         icon: Icon(Icons.arrow_drop_down_circle),
                         iconSize: _height / 3.5 * 0.5,
-                        color: Colors.green,
+                        color: colorGreen,
                         hoverColor: Colors.black,
                         onPressed: doConversion),
                   ),
@@ -162,7 +179,12 @@ class _CardsState extends State<Cards> {
               value: value,
               child: Row(
                 children: <Widget>[
-                  Text(value),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      color: Color.fromRGBO(39, 39, 39, 1),
+                    ),
+                  ),
                 ],
               ),
             ),
