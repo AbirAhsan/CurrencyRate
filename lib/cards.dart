@@ -15,6 +15,7 @@ class _CardsState extends State<Cards> {
   String _toCurrency = "BDT";
   String results;
   List<String> currencies;
+  bool loading=false;
 
   @override
   void initState() {
@@ -34,7 +35,13 @@ class _CardsState extends State<Cards> {
     return "Success";
   }
 
+  var _colorGreen = Colors.green;
+
   Future<String> doConversion() async {
+
+    setState(() {
+      loading=true;
+    });
     var response = await http.get(Uri.encodeFull(
         'http://data.fixer.io/api/latest?access_key=548134d5d214ad70cb34ea70305d88be&base=$_fromCurrency&symbols=$_toCurrency'));
     var responseBody = json.decode(response.body);
@@ -43,6 +50,8 @@ class _CardsState extends State<Cards> {
       results = (double.parse(fromTextControler.text) *
               (responseBody["rates"][_toCurrency]))
           .toString();
+loading = false;
+      // _colorGreen = _colorGreen == Colors.green ? Colors.red : Colors.green;
     });
     print(responseBody["rates"][_toCurrency]);
     return "Success";
@@ -123,11 +132,12 @@ class _CardsState extends State<Cards> {
                             elevation: 10.0,
                             child: Align(
                               alignment: Alignment.center,
-                              child: ListTile(
-                                title: Transform(
-                                  transform: Matrix4.identity()
-                                    ..scale(1.5, 1.0),
-                                  child: Chip(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                textDirection: TextDirection.ltr,
+                                children: <Widget>[
+                                  Chip(
                                     elevation: 10.0,
                                     label: results != null
                                         ? Text(
@@ -141,12 +151,12 @@ class _CardsState extends State<Cards> {
                                             "0.0",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 20.0,
+                                                fontSize: 15.0,
                                                 color: colorBlack),
                                           ),
                                   ),
-                                ),
-                                trailing: _buildDropdownButton(_toCurrency),
+                                  _buildDropdownButton(_toCurrency),
+                                ],
                               ),
                             ),
                           ),
@@ -160,8 +170,8 @@ class _CardsState extends State<Cards> {
                     child: IconButton(
                         icon: Icon(Icons.arrow_drop_down_circle),
                         iconSize: _height / 3.5 * 0.5,
-                        color: colorGreen,
-                        hoverColor: Colors.black,
+                        color: loading? Colors.teal : Colors.red,
+                       
                         onPressed: doConversion),
                   ),
                 ],

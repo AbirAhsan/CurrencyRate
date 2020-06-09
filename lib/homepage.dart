@@ -22,6 +22,7 @@ class HomePage extends StatelessWidget {
             children: <Widget>[
               Text("Check Your Currency Rate"),
               Cards(),
+             
             ],
           ),
         ),
