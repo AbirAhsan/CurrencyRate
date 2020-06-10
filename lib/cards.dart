@@ -15,7 +15,7 @@ class _CardsState extends State<Cards> {
   String _toCurrency = "BDT";
   String results;
   List<String> currencies;
-  bool loading=false;
+  bool loading = false;
 
   @override
   void initState() {
@@ -38,9 +38,8 @@ class _CardsState extends State<Cards> {
   var _colorGreen = Colors.green;
 
   Future<String> doConversion() async {
-
     setState(() {
-      loading=true;
+      loading = true;
     });
     var response = await http.get(Uri.encodeFull(
         'http://data.fixer.io/api/latest?access_key=548134d5d214ad70cb34ea70305d88be&base=$_fromCurrency&symbols=$_toCurrency'));
@@ -50,7 +49,7 @@ class _CardsState extends State<Cards> {
       results = (double.parse(fromTextControler.text) *
               (responseBody["rates"][_toCurrency]))
           .toString();
-loading = false;
+      loading = false;
       // _colorGreen = _colorGreen == Colors.green ? Colors.red : Colors.green;
     });
     print(responseBody["rates"][_toCurrency]);
@@ -166,13 +165,22 @@ loading = false;
                   ),
                   Positioned(
                     left: (_width / 2.4) - (_height / 3.5 * 0.30),
-                    top: (_height * 0.5) / 2.3,
-                    child: IconButton(
-                        icon: Icon(Icons.arrow_drop_down_circle),
-                        iconSize: _height / 3.5 * 0.5,
-                        color: loading? Colors.teal : Colors.red,
-                       
-                        onPressed: doConversion),
+                    top: (_height * 0.5) / 2.35,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: <Widget>[
+                        CircleAvatar(
+                          backgroundColor: loading ? Colors.red : colorBlack,
+                          radius: 50.0,
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.check_circle),
+                            padding: EdgeInsets.all(0),
+                            iconSize: _height / 3.5 * 0.5,
+                            color: colorGreen,
+                            onPressed: doConversion),
+                      ],
+                    ),
                   ),
                 ],
               ),
