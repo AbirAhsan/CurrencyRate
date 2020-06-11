@@ -24,8 +24,8 @@ class _CardsState extends State<Cards> {
   }
 
   Future<String> loadCurrencies() async {
-    var response = await http.get(Uri.http('data.fixer.io', '/api/latest',
-        {"access_key": "548134d5d214ad70cb34ea70305d88be"}));
+    var response = await http.get(Uri.encodeFull(
+        'http://data.fixer.io/api/latest?access_key=548134d5d214ad70cb34ea70305d88be'));
     var responseBody = json.decode(response.body);
     Map currencyMap = responseBody["rates"];
 
@@ -164,21 +164,34 @@ class _CardsState extends State<Cards> {
                     ),
                   ),
                   Positioned(
-                    left: (_width / 2.4) - (_height / 3.5 * 0.30),
+                    left: (_width / 2.4) - (_height / 3.5 * 0.25),
                     top: (_height * 0.5) / 2.35,
                     child: Stack(
                       alignment: Alignment.center,
                       children: <Widget>[
-                        CircleAvatar(
-                          backgroundColor: loading ? Colors.red : colorBlack,
-                          radius: 50.0,
+                        Container(
+                          decoration:
+                              BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 5.0,
+                              offset: Offset(1, 5),
+                              spreadRadius: 3,
+                            )
+                          ]),
+                          child: CircleAvatar(
+                            backgroundColor: loading ? Colors.red : colorGreen,
+                            radius: 50.0,
+                          ),
                         ),
-                        IconButton(
-                            icon: Icon(Icons.check_circle),
-                            padding: EdgeInsets.all(0),
-                            iconSize: _height / 3.5 * 0.5,
-                            color: colorGreen,
-                            onPressed: doConversion),
+                        loading
+                            ? _iconButton()
+                            : IconButton(
+                                icon: Icon(Icons.arrow_downward),
+                                padding: EdgeInsets.all(0),
+                                iconSize: _height / 3.5 * 0.5,
+                                color: Colors.red,
+                                onPressed: doConversion)
                       ],
                     ),
                   ),
@@ -186,6 +199,17 @@ class _CardsState extends State<Cards> {
               ),
             ),
           );
+  }
+
+  Widget _iconButton() {
+    var screenSize = MediaQuery.of(context).size;
+    var _height = screenSize.height;
+    return IconButton(
+        icon: Icon(Icons.check_circle),
+        padding: EdgeInsets.all(0),
+        iconSize: _height / 3.5 * 0.5,
+        color: Color.fromRGBO(80, 216, 144, 1),
+        onPressed: doConversion);
   }
 
   Widget _buildDropdownButton(String currencyCategory) {
